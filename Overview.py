@@ -1,5 +1,8 @@
 import streamlit as st
 import utils
+from dotenv import load_dotenv
+
+load_dotenv()
 
 code = """
 print("Hello")

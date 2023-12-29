@@ -1,3 +1,4 @@
+from typing import Union
 import streamlit as st
 from streamlit.components.v1.components import CustomComponent
 import contextlib
@@ -5,6 +6,8 @@ from functools import wraps
 from io import StringIO
 from code_editor import code_editor
 from functools import partial
+import openai
+import os
 
 
 def get_customized_code_editor() -> CustomComponent:
@@ -209,6 +212,85 @@ def code_interpreter_stdout(code: str) -> str:
 
 
 # TODO: code interpreter that can get the latest variable or output
+
+
+def generate_api_and_language_model_selection_and_get_model() -> (
+    Union[openai.OpenAI, openai.AzureOpenAI, None]
+):
+    openai_selection = st.selectbox("OpenAI Version", ["OpenAI", "Azure OpenAI"])
+
+    if openai_selection == "OpenAI":
+        st.session_state.openai_api_key = st.text_input(
+            "OpenAI API Key",
+            value=st.session_state.get("openai_api_key", os.getenv("OPENAI_API_KEY")),
+            type="password",
+        )
+    elif openai_selection == "Azure OpenAI":
+        st.session_state.azure_openai_api_key = st.text_input(
+            "Azure OpenAI API Key",
+            value=st.session_state.get(
+                "azure_openai_api_key", os.getenv("AZURE_OPENAI_KEY")
+            ),
+            type="password",
+        )
+        st.session_state.azure_openai_endpoint = st.text_input(
+            "Azure OpenAI Endpoint",
+            value=st.session_state.get(
+                "azure_openai_endpoint", os.getenv("AZURE_OPENAI_ENDPOINT")
+            ),
+            type="default",
+        )
+        st.session_state.azure_openai_deployment_name = st.text_input(
+            "Azure OpenAI Deployment Name",
+            value=st.session_state.get(
+                "azure_openai_deployment_name",
+                os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
+            ),
+            type="default",
+        )
+        st.session_state.azure_openai_version = st.text_input(
+            "Azure OpenAI Version",
+            value=st.session_state.get(
+                "azure_openai_version", os.getenv("AZURE_OPENAI_VERSION")
+            ),
+            type="default",
+        )
+
+    # st.divider()
+    #
+    # st.session_state.model = st.text_input(
+    #     "Model Name",
+    #     value=st.session_state.get("model", "gpt-3.5-turbo"),
+    #     type="default",
+    # )
+    # st.session_state.temperature = st.number_input(
+    #     "Temperature",
+    #     min_value=0.0,
+    #     max_value=2.0,
+    #     step=0.1,
+    #     value=st.session_state.get("temperature", 0.0),
+    # )
+
+    if openai_selection == "OpenAI":
+        if not st.session_state.openai_api_key:
+            st.warning("🥸 Please add your OpenAI API key to continue.")
+            return None
+
+        client = openai.OpenAI(api_key=st.session_state.openai_api_key)
+
+    elif openai_selection == "Azure OpenAI":
+        if not st.session_state.azure_openai_api_key:
+            st.warning("🥸 Please add your Azure OpenAI API key to continue.")
+            return None
+
+        client = openai.AzureOpenAI(
+            api_key=st.session_state.azure_openai_api_key,
+            azure_endpoint=st.session_state.azure_openai_endpoint,
+            azure_deployment=st.session_state.azure_openai_deployment_name,
+            api_version=st.session_state.azure_openai_version,
+        )
+
+    return client
 
 
 if __name__ == "__main__":

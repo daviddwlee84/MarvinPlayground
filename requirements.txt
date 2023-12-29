@@ -1,2 +1,5 @@
 streamlit
 streamlit_code_editor
+marvin==2.0.0a1
+openai
+python-dotenv

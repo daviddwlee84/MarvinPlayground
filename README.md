@@ -6,6 +6,8 @@ Streamlit-based playground that can play with Marvin AI Function and Model
 
 Marvin
 
+> NOTE: currently, Marvin 1.5.6 requires legacy openai version 0.28 (otherwise will not found `openai.openai_object`) => Should use Marvin 2.0+ ([ImportError: cannot import name 'OpenAI' from 'openai' · Issue #701 · PrefectHQ/marvin](https://github.com/PrefectHQ/marvin/issues/701))
+
 - [Marvin - Marvin](https://www.askmarvin.ai/)
   - [Quickstart - Marvin](https://www.askmarvin.ai/welcome/quickstart/#__tabbed_1_1)
   - [PrefectHQ/marvin: ✨ Build AI interfaces that spark joy](https://github.com/PrefectHQ/marvin)
