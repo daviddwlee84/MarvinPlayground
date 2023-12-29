@@ -2,6 +2,13 @@
 
 Streamlit-based playground that can play with Marvin AI Function and Model
 
+## Getting Started
+
+```bash
+pip install -r requirements.txt
+streamlit run Overview.py
+```
+
 ## Resources
 
 Marvin
